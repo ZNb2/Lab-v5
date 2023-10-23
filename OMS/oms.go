@@ -137,7 +137,7 @@ func Escuchar(puerto string){
 
 func Escribir(mensaje string, nombreArchivo string) error {
 
-	directorioActual, _ := os.Getwd()
+	directorio, _ := os.Getwd()
 	archivo, err := os.OpenFile(directorioActual+nombreArchivo, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644)
 	if err != nil {
 		return err
