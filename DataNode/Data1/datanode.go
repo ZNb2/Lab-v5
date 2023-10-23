@@ -13,27 +13,25 @@ import (
 	"google.golang.org/grpc"
 )
 
+var DataNode_name = "DataNode1"
+
 type Server struct {
 	pb.UnimplementedChatServiceServer
 }
 
 func (s *Server)SayHello(ctx context.Context, in *pb.Message)(*pb.Message, error){
+
 	log.Printf("Receive message body from client: %s", in.Body)
-
-	inMessage:=string(in.Body)
-
-	directorioActual, err := os.Getwd()
-	if err != nil {
-		fmt.Println("Error al obtener el directorio actual:", err)
-	}
+	directorioActual, _ := os.Getwd()
 	
-	if len(inMessage) > 1{
+	if !strings.Contains(in.Body, ":") {
 		fileDataNode, err := os.OpenFile(filepath.Join(directorioActual,"DataNode","Data1","Data.txt"), os.O_APPEND|os.O_CREATE|os.O_WRONLY,0644)
 		if err != nil{
 			fmt.Println("Ha ocurrido un error en la creacion del archivo: ",err)
 		}
-		fmt.Fprintln(fileDataNode, inMessage)
+		fmt.Fprintln(fileDataNode, in.Body)
 		return &pb.Message{Body: "OK"}, nil
+
 	}else{
 		content, err := os.ReadFile(filepath.Join(directorioActual,"DataNode","Data1","Data.txt"))
 		if err != nil {
@@ -42,13 +40,13 @@ func (s *Server)SayHello(ctx context.Context, in *pb.Message)(*pb.Message, error
 		lineas := strings.Split(string(content), "\n")
 
 		for i := 0; i < len(lineas); i++ {
-			split:=strings.Split(lineas[i],"-")//id-nombre-apellido
-			id:=split[0]
-			nombre:=split[1]
-			apellido:=split[2]
+			split := strings.Split(lineas[i],":")//id-nombre-apellido
+			id := split[0]
+			nombre := split[1]
+			apellido := split[2]
 
-			nombre_apellido:=nombre+"-"+apellido
-			nombre_apellido=strings.Replace(nombre_apellido, "\r", "", -1)
+			nombre_apellido := nombre+"-"+apellido
+			nombre_apellido = strings.Replace(nombre_apellido, "\r", "", -1)
 
 			if id == inMessage {
 				return &pb.Message{Body: nombre_apellido}, nil
@@ -58,9 +56,9 @@ func (s *Server)SayHello(ctx context.Context, in *pb.Message)(*pb.Message, error
 	}
 }
 
-var DataNode_name string
+
 func main(){
-	DataNode_name="DataNode1"
+	
 	fmt.Println("Starting "+DataNode_name+" . . .")
 
 	puerto := ":50053"

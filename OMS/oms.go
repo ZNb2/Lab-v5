@@ -69,7 +69,7 @@ func (s *Server) SayHello(ctx context.Context, in *pb.Message) (*pb.Message, err
 		
 		id++
 		Escribir(strconv.Itoa(id) +","+datanode+","+mensaje[2], "DATA.txt")
-		msj_datanode := strconv.Itoa(id) +"-"+ mensaje[0] +"-"+ mensaje[1]
+		msj_datanode := strconv.Itoa(id) +":"+ mensaje[0] +":"+ mensaje[1]
 		log.Printf("Solicitud de %s recibida, mensaje enviado: %s", p1, msj_datanode)
 		//ConexionGRPC(Node[datanode], msj_datanode)
 		

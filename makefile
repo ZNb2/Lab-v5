@@ -1,8 +1,6 @@
-build:
-	docker build -t lab1:latest .
-
 docker-ONU:
 ifeq ($(HOST),localhost)
+	docker build -t lab1:latest .
 	docker rm -f onu
 	docker run -d -it --name onu --expose 50052 lab1:latest go run ONU/onu.go
 else
@@ -10,6 +8,7 @@ else
 endif
 
 docker-continentes:
+	docker build -t lab1:latest .
 	docker rm -f regional
 ifeq ($(HOST),localhost)
 	docker run -d -it --rm --name regional -p 50052:50052 lab1:latest go run Regionales/Australia/regional.go
@@ -26,14 +25,18 @@ endif
 
 docker-OMS:
 ifeq ($(HOST),dist106)
+	docker build -t lab1:latest .
 	docker rm -f oms
+	rm -rf OMS/DATA.txt
 	docker run -d -it --name oms --expose 50053 lab1:latest go run OMS/oms.go
 else
 	echo "Ejecutar SOLO en dist106"
 endif
 
 docker-datanode:
+	docker build -t lab1:latest .
 	docker rm -f datanode
+	rm -rf OMS/DATA.txt
 ifeq ($(HOST),dist107)
 	docker run -d -it --name datanode --expose 50053 lab1:latest go run Data1/datanode.go
 ifeq ($(HOST),dist108)
