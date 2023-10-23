@@ -18,33 +18,26 @@ import (
 
 var (
 	Servidores = map[string]string{
-		"5:50052": "Australia",
-		"6:50052": "Asia",
-		"7:50052": "Europa",
-		"8:50052": "Latinoamerica",
-		
+		"5:50052": "Australia", "6:50052": "Asia", "7:50052": "Europa", "8:50052": "Latinoamerica",
+		"7:50054": "DataNode 1", "8:50054": "DataNode 2",
 		"5:50053": "ONU",
-		"7:50053": "DataNode 1",
-		"8:50053": "DataNode 2",
 	}
 )
 
 var (
-	Node = map[string]string{
-		"1": "dist107.inf.santiago.usm.cl:50053",
-		"2": "dist108.inf.santiago.usm.cl:50053",
+	Vms = map[string]string{
 		"ONU": "dist107.inf.santiago.usm.cl:50053",
+		"1": "dist107.inf.santiago.usm.cl:50054",
+		"2": "dist108.inf.santiago.usm.cl:50054",
 	}
 )
 
 var (
 	Inicial = map[string]string{
-		  "A": "1" ,"B": "1" ,"C": "1" ,"D": "1" ,
-		  "E": "1" ,"F": "1" ,"G": "1" ,"H": "1" ,
-		  "I": "1" ,"J": "1" ,"K": "1" ,"L": "1" ,
-		  "M": "1" ,"N": "2" ,"O": "2" ,"P": "2" ,
-		  "Q": "2" ,"R": "2" ,"S": "2" ,"T": "2" ,
-		  "U": "2" ,"V": "2" ,"W": "2" ,"X": "2" ,
+		  "A": "1" ,"B": "1" ,"C": "1" ,"D": "1" , "E": "1" ,"F": "1" ,
+		  "G": "1" ,"H": "1" ,"I": "1" ,"J": "1" , "K": "1" ,"L": "1" ,
+		  "M": "1" ,"N": "2" ,"O": "2" ,"P": "2" , "Q": "2" ,"R": "2" ,
+		  "S": "2" ,"T": "2" , "U": "2" ,"V": "2" ,"W": "2" ,"X": "2" ,
 		  "Y": "2" ,"Z": "2" ,
 	}
 )
@@ -68,34 +61,38 @@ func (s *Server) SayHello(ctx context.Context, in *pb.Message) (*pb.Message, err
 		datanode := Inicial[string(mensaje[1][0])]
 		
 		id++
-		Escribir(strconv.Itoa(id) +","+datanode+","+mensaje[2], "DATA.txt")
-		msj_datanode := strconv.Itoa(id) +":"+ mensaje[0] +":"+ mensaje[1]
+		Escribir(strconv.Itoa(id) +","+datanode+","+mensaje[2], "/OMS/DATA.txt")
+		msj_datanode := strconv.Itoa(id) +"::"+ mensaje[0] +"::"+ mensaje[1]
 		log.Printf("Solicitud de %s recibida, mensaje enviado: %s", p1, msj_datanode)
-		ConexionGRPC(Node[datanode], msj_datanode)
+		ConexionGRPC(Vms[datanode], msj_datanode)
 		
-	} else if strings.Contains(in.Body, "-"){
+	} else if strings.Contains(in.Body, "::"){
 		//Mensaje de Datanode
-		
-		num := 10 //Obtener
-		for i := 0; i < num; i++ {
-			//ConexionGRPC(ONU, Listado)
-		}
-		
-		for{
-			if num == msj_data{
-				msj_data = 0
-				Listado = ""
-		        }
-		}
+		p1 = Servidores[string(p1[len(p1)-1]) + ":50054"]
+		log.Printf(in.Body)
+		msj_data += in.Body + "\n"
+		Listado ++
 		
 	} else {
 		//Mensaje de ONU
-		log.Printf("ONU")
-		//ConexionGRPC(Datanode1, in.Body)
-		//ConexionGRPC(Datanode2, in.Body)
-		
+		p1 = Servidores[string(p1[len(p1)-1]) + ":50053"]
+
+		content, err := os.ReadFile(directorio)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		lineas := strings.Split(string(content), "\n")
+
+		for i := 0; i < len(lineas); i++ {
+			
+			split := strings.Split(lineas[i],",")//id-nombre-apellido
+			if split[2] == in.Body) {
+				ConexionGRPC(Vms[split[1]], split[0])
+			}
+		}
+		ConexionGRPC(Vms["ONU"], msj_datanode)
 	}
-	
 	
 	return &pb.Message{Body: "OK"}, nil
 }
@@ -111,12 +108,7 @@ func ConexionGRPC(Servidor string, mensaje string){
 	defer conn.Close()
 	c := pb.NewChatServiceClient(conn)
 	for {
-		log.Println("Estado enviado:", strings.Replace(mensaje, "-", " ", -1))
-		response, err := c.SayHello(context.Background(), &pb.Message{Body: mensaje})
-		if strings.Contains(response.Body, "-"){
-			Listado += response.Body + "\n"
-			msj_data++
-		}
+		_, err := c.SayHello(context.Background(), &pb.Message{Body: mensaje})
 		if err != nil {
 			log.Println(Servidor, "not responding")
 			log.Println("Trying again in 10 seconds . . .")
@@ -125,7 +117,6 @@ func ConexionGRPC(Servidor string, mensaje string){
 		}
 		break
 	}
-
 }
 
 func Escuchar(puerto string){
@@ -147,7 +138,7 @@ func Escuchar(puerto string){
 func Escribir(mensaje string, nombreArchivo string) error {
 
 	directorioActual, _ := os.Getwd()
-	archivo, err := os.OpenFile(directorioActual+"/OMS/"+nombreArchivo, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644)
+	archivo, err := os.OpenFile(directorioActual+nombreArchivo, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644)
 	if err != nil {
 		return err
 	}
