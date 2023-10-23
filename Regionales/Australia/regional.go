@@ -79,7 +79,6 @@ func main() {
 
 	directorioActual, _ := os.Getwd()
 	content, err := os.ReadFile(directorioActual+"/Regionales/names.txt")
-	content, err := os.ReadFile(directorioActual+"Regionales/names.txt")
 	if err != nil {
 		log.Fatal(err)
 	}
