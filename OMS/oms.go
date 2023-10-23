@@ -33,6 +33,7 @@ var (
 	Node = map[string]string{
 		"1": "dist107.inf.santiago.usm.cl:50053",
 		"2": "dist108.inf.santiago.usm.cl:50053",
+		"ONU": "dist107.inf.santiago.usm.cl:50053",
 	}
 )
 
