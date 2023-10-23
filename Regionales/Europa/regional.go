@@ -64,9 +64,9 @@ func ObtenerNombre() string{
 func ObtenerStatus() string{
 
 	if rand.Intn(100) > 55{
-		return "muerto"
+		return "Muerto"
 	}else {
-		return "infectado"
+		return "Infectado"
 	}
 }
 
