@@ -18,10 +18,14 @@ import (
 
 var (
 	Servidores = map[string]string{
-		"127.0.0.1:50052": "Continene",
-		"127.0.0.1:50053": "ONU",
-		"127.0.0.1:50054": "DataNode 1",
-		"127.0.0.1:50055": "DataNode 2",
+		"5:50052": "Australia",
+		"6:50052": "Asia",
+		"7:50052": "Europa",
+		"8:50052": "Latinoamerica",
+		
+		"5:50053": "ONU",
+		"7:50053": "DataNode 1",
+		"8:50053": "DataNode 2",
 	}
 )
 
@@ -51,7 +55,7 @@ func (s *Server) SayHello(ctx context.Context, in *pb.Message) (*pb.Message, err
 		
 	if strings.Contains(in.Body, "--"){
 		//Mensaje de Contiente
-		p1 += ":50052"
+		p1 = Servidores[string(pi[len(p1)-1]) + ":50052"]
 		mensaje := strings.Split(in.Body, "--")
 		//Datanode := Inicial[string(mensaje[1][0])]
 		//log.Printf("%s, %s", Datanode, Servidores[p1])
