@@ -43,7 +43,7 @@ func (s *Server)SayHello(ctx context.Context, in *pb.Message)(*pb.Message, error
 		for i := 0; i < len(lineas); i++ {
 			
 			split := strings.Split(lineas[i],"::")//id-nombre-apellido
-			if split[0] == id) {
+			if split[0] == id {
 				nombre_apellido := split[1]+"::"+split[2]
 				ConexionGRPC(Servidor_OMS, nombre_apellido)
 			}
