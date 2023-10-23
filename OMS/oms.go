@@ -7,6 +7,7 @@ import (
 	"net"
 	//"os"
 	"strings"
+	"strconv"
 	"time"
 
 	pb "github.com/MetalDanyboy/Lab1/protos"
@@ -57,7 +58,7 @@ func (s *Server) SayHello(ctx context.Context, in *pb.Message) (*pb.Message, err
 		
 		id++
 		//Añadir al txt: id, datanode, estado
-		msj_datanode := string(id) +"-"+ mensaje[0] +"-"+ mensaje[1]
+		msj_datanode := strconv.Itoa(id) +"-"+ mensaje[0] +"-"+ mensaje[1]
 		log.Printf("Solicitud de %s recibida, mensaje enviado: %s", p1, msj_datanode)
 		//ConexionGRPC(Datanode, msj_datanode)
 		
