@@ -88,7 +88,7 @@ func (s *Server) SayHello(ctx context.Context, in *pb.Message) (*pb.Message, err
 		for i := 0; i < len(lineas); i++ {
 			
 			split := strings.Split(lineas[i],",")//id-datanode-estado
-			if split[2] == in.Body) {
+			if split[2] == in.Body {
 				ConexionGRPC(Vms[split[1]], split[0])
 			}
 		}
