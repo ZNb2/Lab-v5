@@ -58,7 +58,7 @@ func (s *Server) SayHello(ctx context.Context, in *pb.Message) (*pb.Message, err
 		id++
 		//Añadir al txt: id, datanode, estado
 		msj_datanode := string(id) +"-"+ mensaje[0] +"-"+ mensaje[1]
-		log.Printf("Solicitud de %s recibida, mensaje enviado: %s", in.Body, msj_datanode)
+		log.Printf("Solicitud de %s recibida, mensaje enviado: %s", p1, msj_datanode)
 		//ConexionGRPC(Datanode, msj_datanode)
 		
 	} else if strings.Contains(in.Body, "-"){
