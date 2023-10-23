@@ -46,7 +46,8 @@ type Server struct{
 	pb.UnimplementedChatServiceServer
 }
 
-var msj_data,id int
+var msj_data string
+var id int
 
 func (s *Server) SayHello(ctx context.Context, in *pb.Message) (*pb.Message, error) {
 	
