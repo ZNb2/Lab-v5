@@ -63,7 +63,7 @@ func main(){
 	DataNode_name="DataNode1"
 	fmt.Println("Starting "+DataNode_name+" . . .")
 
-	puerto := ":50052"
+	puerto := ":50053"
 	lis, err := net.Listen("tcp", puerto)
 	fmt.Printf("Escuchando %s\n", puerto)
 	if err != nil {
