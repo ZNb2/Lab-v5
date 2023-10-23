@@ -26,7 +26,7 @@ var (
 
 var (
 	Vms = map[string]string{
-		"ONU": "dist107.inf.santiago.usm.cl:50053",
+		"ONU": "dist105.inf.santiago.usm.cl:50053",
 		"1": "dist107.inf.santiago.usm.cl:50054",
 		"2": "dist108.inf.santiago.usm.cl:50054",
 	}
