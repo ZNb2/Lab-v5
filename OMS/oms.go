@@ -76,7 +76,7 @@ func (s *Server) SayHello(ctx context.Context, in *pb.Message) (*pb.Message, err
 		p1 = Servidores[string(p1[len(p1)-1]) + ":50053"]
 		log.Printf("Solicitud de %s recibida, mensaje enviado: %s", p1, in.body)
 
-		directorioActual := os.Getwd()
+		directorioActual, _ := os.Getwd()
 		content, err := os.ReadFile(directorio+"/OMS/DATA.txt")
 		if err != nil {
 			log.Fatal(err)
