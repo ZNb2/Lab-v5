@@ -14,44 +14,41 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 )
 
+var server_name = "ONU"
+//var Servidor_OMS = "localhost:50052"
+var Servidor_OMS ="dist106.inf.santiago.usm.cl:50053"
 
 func ConexionGRPC(mensaje string ){
 	
-	//Uno de estos debe cambiar quizas por "regional:50052" ya que estara en la misma VM que el central
-	//host :="localhost"
-	var puerto, nombre, host string
-	host="dist108.inf.santiago.usm.cl"
-	puerto ="50055"
-	nombre ="OMS"
-	
-	log.Println("Connecting to server "+nombre+": "+host+":"+puerto+". . .")
-	conn, err := grpc.Dial(host+":"+puerto,grpc.WithTransportCredentials(insecure.NewCredentials()))	
+	conn, err := grpc.Dial(Servidor_OMS, grpc.WithTransportCredentials(insecure.NewCredentials()))	
 	if err != nil {
 		log.Fatalf("Failed to connect: %v", err)
 	}
-	fmt.Printf("Esperando\n")
+	
 	defer conn.Close()
-
 	c := pb.NewChatServiceClient(conn)
 	for {
-		log.Println("Sending message to server "+nombre+": "+mensaje)
-		response, err := c.SayHello(context.Background(), &pb.Message{Body: mensaje})
+		_, err := c.SayHello(context.Background(), &pb.Message{Body: mensaje})
 		if err != nil {
-			log.Println("Server "+nombre+" not responding: ")
-			log.Println("Trying again in 10 seconds. . .")
+			log.Println("Server OMS not responding ")
+			log.Println("Trying again in 10 seconds . . .")
 			time.Sleep(10 * time.Second)
 			continue
 		}
-		log.Printf("Response from server "+nombre+": "+"\n%s", response.Body)
 		break
 	}
+	log.Println("Estado enviado:", strings.Replace(mensaje, "--", " ", -1))
 }
 
+var (
+	Estados = map[string]string{
+		"I": "Infectado",
+		"M": "Muerto",
+	}
+)
 
-
-var server_name string
 func main() {
-	server_name="ONU"
+
 	fmt.Println("Starting " + server_name + " . . .\n")
 
 	for {
@@ -69,7 +66,7 @@ func main() {
 	input = strings.ToUpper(input)
 	if input == "I" || input =="M" {
 		//fmt.Println(input)
-		ConexionGRPC(input)
+		ConexionGRPC(Estados[input])
 	}else{
 		fmt.Println("\nComando no reconocido!\n")
 	}

@@ -17,7 +17,7 @@ import (
 
 var DataNode_name = "DataNode2"
 //var Servidor_OMS = "localhost:50052"
-var Servidor_OMS ="dist106.inf.santiago.usm.cl:50052"
+var Servidor_OMS ="dist106.inf.santiago.usm.cl:50054"
 
 type Server struct {
 	pb.UnimplementedChatServiceServer

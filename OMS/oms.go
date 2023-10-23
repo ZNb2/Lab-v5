@@ -76,6 +76,7 @@ func (s *Server) SayHello(ctx context.Context, in *pb.Message) (*pb.Message, err
 	} else {
 		//Mensaje de ONU
 		p1 = Servidores[string(p1[len(p1)-1]) + ":50053"]
+		log.Printf("Solicitud de %s recibida, mensaje enviado: %s", p1, in.body)
 
 		content, err := os.ReadFile(directorio)
 		if err != nil {
@@ -91,7 +92,7 @@ func (s *Server) SayHello(ctx context.Context, in *pb.Message) (*pb.Message, err
 				ConexionGRPC(Vms[split[1]], split[0])
 			}
 		}
-		ConexionGRPC(Vms["ONU"], msj_datanode)
+		//ConexionGRPC(Vms["ONU"], msj_datanode)
 	}
 	
 	return &pb.Message{Body: "OK"}, nil
@@ -160,7 +161,8 @@ func main() {
 	fmt.Println("Starting "+server_name+" . . .")
 	
 	go Escuchar(":50052")
-	Escuchar(":50053")
+	go Escuchar(":50053")
+	Escuchar(":50054")
 	
 }
 
