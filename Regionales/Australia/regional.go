@@ -76,8 +76,9 @@ func main() {
 		
 	fmt.Println("Iniciando regional "+server_name+" . . .\n")
 	rand.Seed(time.Now().UnixNano())
-			
-	content, err := os.ReadFile("../names.txt")
+
+	directorioActual, _ := os.Getwd()
+	content, err := os.ReadFile(directorioActual+"Regionales/names.txt")
 	if err != nil {
 		log.Fatal(err)
 	}
