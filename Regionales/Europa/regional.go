@@ -38,6 +38,7 @@ func ConexionGRPC(mensaje string ){
 		}
 		break
 	}
+	log.Println("Estado enviado:", strings.Replace(mensaje, "--", " ", -1))
 }
 
 func ObtenerNombre() string{
