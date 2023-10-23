@@ -7,7 +7,6 @@ import (
 	"net"
 	"os"
 	"strings"
-	"strconv"
 	"time"
 
 	pb "github.com/MetalDanyboy/Lab1/protos"
@@ -26,7 +25,7 @@ type Server struct {
 func (s *Server)SayHello(ctx context.Context, in *pb.Message)(*pb.Message, error){
 
 	log.Printf("Receive message body from client: %s", in.Body)
-	directorio, _ := "DataNode/Data1/DATA.txt"
+	directorio := "DataNode/Data1/DATA.txt"
 	
 	if strings.Contains(in.Body, "::") {
 		Escribir(in.Body, directorio)
@@ -43,7 +42,7 @@ func (s *Server)SayHello(ctx context.Context, in *pb.Message)(*pb.Message, error
 		for i := 0; i < len(lineas); i++ {
 			
 			split := strings.Split(lineas[i],"::")//id-nombre-apellido
-			if split[0] == id {
+			if split[0] == in.Body {
 				nombre_apellido := split[1]+"::"+split[2]
 				ConexionGRPC(Servidor_OMS, nombre_apellido)
 			}
