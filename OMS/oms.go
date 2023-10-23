@@ -55,7 +55,7 @@ func (s *Server) SayHello(ctx context.Context, in *pb.Message) (*pb.Message, err
 		
 	if strings.Contains(in.Body, "--"){
 		//Mensaje de Contiente
-		p1 = Servidores[string(pi[len(p1)-1]) + ":50052"]
+		p1 = Servidores[string(p1[len(p1)-1]) + ":50052"]
 		mensaje := strings.Split(in.Body, "--")
 		//Datanode := Inicial[string(mensaje[1][0])]
 		//log.Printf("%s, %s", Datanode, Servidores[p1])
