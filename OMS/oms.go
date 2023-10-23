@@ -67,7 +67,7 @@ func (s *Server) SayHello(ctx context.Context, in *pb.Message) (*pb.Message, err
 		datanode := Inicial[string(mensaje[1][0])]
 		
 		id++
-		Escribir("DATA.txt", strconv.Itoa(id)+","+datanode+","+estado)
+		Escribir(strconv.Itoa(id) +","+datanode+","+mensaje[2], "DATA.txt")
 		msj_datanode := strconv.Itoa(id) +"-"+ mensaje[0] +"-"+ mensaje[1]
 		log.Printf("Solicitud de %s recibida, mensaje enviado: %s", p1, msj_datanode)
 		//ConexionGRPC(Node[datanode], msj_datanode)
@@ -143,11 +143,9 @@ func Escuchar(puerto string){
 	}
 }
 
-func Escribir(nombreArchivo string, mensaje string) error {
+func Escribir(mensaje string, nombreArchivo string) error {
 
-	
-	directorioActual, _ := os.Getwd()
-	content, err := os.ReadFile(directorioActual+"/OMS/"+nombreArchivo, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644)
+	archivo, err := os.OpenFile(nombreArchivo, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644)
 	if err != nil {
 		return err
 	}
