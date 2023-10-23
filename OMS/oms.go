@@ -30,14 +30,21 @@ var (
 )
 
 var (
+	Node = map[string]string{
+		"1": "dist107.inf.santiago.usm.cl:50053",
+		"2": "dist108.inf.santiago.usm.cl:50053",
+	}
+)
+
+var (
 	Inicial = map[string]string{
-		  "A": "DataNode 1" ,"B": "DataNode 1" ,"C": "DataNode 1" ,"D": "DataNode 1" ,
-		  "E": "DataNode 1" ,"F": "DataNode 1" ,"G": "DataNode 1" ,"H": "DataNode 1" ,
-		  "I": "DataNode 1" ,"J": "DataNode 1" ,"K": "DataNode 1" ,"L": "DataNode 1" ,
-		  "M": "DataNode 1" ,"N": "DataNode 2" ,"O": "DataNode 2" ,"P": "DataNode 2" ,
-		  "Q": "DataNode 2" ,"R": "DataNode 2" ,"S": "DataNode 2" ,"T": "DataNode 2" ,
-		  "U": "DataNode 2" ,"V": "DataNode 2" ,"W": "DataNode 2" ,"X": "DataNode 2" ,
-		  "Y": "DataNode 2" ,"Z": "DataNode 2" ,
+		  "A": "1" ,"B": "1" ,"C": "1" ,"D": "1" ,
+		  "E": "1" ,"F": "1" ,"G": "1" ,"H": "1" ,
+		  "I": "1" ,"J": "1" ,"K": "1" ,"L": "1" ,
+		  "M": "1" ,"N": "2" ,"O": "2" ,"P": "2" ,
+		  "Q": "2" ,"R": "2" ,"S": "2" ,"T": "2" ,
+		  "U": "2" ,"V": "2" ,"W": "2" ,"X": "2" ,
+		  "Y": "2" ,"Z": "2" ,
 	}
 )
 
@@ -57,14 +64,13 @@ func (s *Server) SayHello(ctx context.Context, in *pb.Message) (*pb.Message, err
 		//Mensaje de Contiente
 		p1 = Servidores[string(p1[len(p1)-1]) + ":50052"]
 		mensaje := strings.Split(in.Body, "--")
-		//Datanode := Inicial[string(mensaje[1][0])]
-		//log.Printf("%s, %s", Datanode, Servidores[p1])
+		datanode := Inicial[string(mensaje[1][0])]
 		
 		id++
-		//Añadir al txt: id, datanode, estado
+		Escribir("DATA.txt", id+","+datanode+","+estado)
 		msj_datanode := strconv.Itoa(id) +"-"+ mensaje[0] +"-"+ mensaje[1]
 		log.Printf("Solicitud de %s recibida, mensaje enviado: %s", p1, msj_datanode)
-		//ConexionGRPC(Datanode, msj_datanode)
+		//ConexionGRPC(Node[datanode], msj_datanode)
 		
 	} else if strings.Contains(in.Body, "-"){
 		//Mensaje de Datanode
@@ -137,6 +143,22 @@ func Escuchar(puerto string){
 	}
 }
 
+func Escribir(mensaje string, nombreArchivo string) error {
+
+	archivo, err := os.OpenFile(nombreArchivo, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644)
+	if err != nil {
+		return err
+	}
+	defer archivo.Close()
+
+	// Escribimos el mensaje seguido de un salto de línea
+	_, err = fmt.Fprintf(archivo, "%s\n", mensaje)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
 
 
 func main() {
