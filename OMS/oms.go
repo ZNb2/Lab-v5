@@ -75,7 +75,7 @@ func (s *Server) SayHello(ctx context.Context, in *pb.Message) (*pb.Message, err
 	} else {
 		//Mensaje de ONU
 		p1 = Servidores[string(p1[len(p1)-1]) + ":50053"]
-		log.Printf("Solicitud de %s recibida, mensaje enviado: %s", p1, in.body)
+		log.Printf("Solicitud de %s recibida, mensaje enviado: %s", p1, in.Body)
 
 		directorio, _ := os.Getwd()
 		content, err := os.ReadFile(directorio+"/OMS/DATA.txt")
