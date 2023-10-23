@@ -16,7 +16,7 @@ import (
 
 var server_name = "Australia"
 //var Servidor_OMS = "localhost:50052"
-var host ="dist105.inf.santiago.usm.cl:50052"
+var Servidor_OMS ="dist105.inf.santiago.usm.cl:50052"
 
 func ConexionGRPC(mensaje string ){
 	
