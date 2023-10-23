@@ -47,7 +47,6 @@ type Server struct{
 }
 
 var msj_data,id int
-var Listado string
 
 func (s *Server) SayHello(ctx context.Context, in *pb.Message) (*pb.Message, error) {
 	
@@ -70,8 +69,7 @@ func (s *Server) SayHello(ctx context.Context, in *pb.Message) (*pb.Message, err
 		//Mensaje de Datanode
 		p1 = Servidores[string(p1[len(p1)-1]) + ":50054"]
 		log.Printf(in.Body)
-		msj_data += in.Body + "\n"
-		Listado ++
+		msj_data += string(in.Body) + "\n"
 		
 	} else {
 		//Mensaje de ONU
