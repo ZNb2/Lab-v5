@@ -28,7 +28,6 @@ func ConexionGRPC(mensaje string ){
 	defer conn.Close()
 	c := pb.NewChatServiceClient(conn)
 	for {
-		log.Println("Estado enviado:", strings.Replace(mensaje, "--", " ", -1))
 		_, err := c.SayHello(context.Background(), &pb.Message{Body: mensaje})
 		if err != nil {
 			log.Println("Server OMS not responding ")
@@ -38,6 +37,7 @@ func ConexionGRPC(mensaje string ){
 		}
 		break
 	}
+	log.Println("Estado enviado:", strings.Replace(mensaje, "--", " ", -1))
 }
 
 func ObtenerNombre() string{
