@@ -9,66 +9,69 @@ import (
 	"strings"
 	"time"
 
-	pb "github.com/MetalDanyboy/Lab1/protos"
+	pb "github.com/Sistemas-Distribuidos-2023-02/Grupo27-Laboratorio-2/protos"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
 
-var server_name = "ONU"
-//var Servidor_OMS = "localhost:50052"
-var Servidor_OMS ="dist106.inf.santiago.usm.cl:50053"
 
 func ConexionGRPC(mensaje string ){
 	
-	conn, err := grpc.Dial(Servidor_OMS, grpc.WithTransportCredentials(insecure.NewCredentials()))	
+	//Uno de estos debe cambiar quizas por "regional:50052" ya que estara en la misma VM que el central
+	//host :="localhost"
+	var puerto, nombre, host string
+	host="dist105.inf.santiago.usm.cl"
+	puerto ="50053"
+	nombre ="OMS"
+	
+	log.Println("Connecting to server "+nombre+": "+host+":"+puerto+". . .")
+	conn, err := grpc.Dial(host+":"+puerto,grpc.WithTransportCredentials(insecure.NewCredentials()))	
 	if err != nil {
 		log.Fatalf("Failed to connect: %v", err)
 	}
-	
+	log.Printf("Esperando\n")
 	defer conn.Close()
+
 	c := pb.NewChatServiceClient(conn)
 	for {
-		_, err := c.SayHello(context.Background(), &pb.Message{Body: mensaje})
+		log.Println("Sending message to server "+nombre+": "+mensaje)
+		response, err := c.OnuToOms(context.Background(), &pb.Message{Body: mensaje})
 		if err != nil {
-			log.Println("Server OMS not responding ")
-			log.Println("Trying again in 10 seconds . . .")
+			log.Println("Server "+nombre+" not responding: ")
+			log.Println("Trying again in 10 seconds. . .")
 			time.Sleep(10 * time.Second)
 			continue
 		}
+		log.Printf("Response from server "+nombre+": "+"\n%s\n", response.Body)
 		break
 	}
-	log.Println("Estado enviado:", strings.Replace(mensaje, "--", " ", -1))
 }
 
-var (
-	Estados = map[string]string{
-		"I": "Infectado",
-		"M": "Muerto",
-	}
-)
 
+
+var server_name string
 func main() {
-
-	fmt.Println("Starting " + server_name + " . . .\n")
+	server_name="ONU"
+	log.Println("Starting " + server_name + " . . .\n")
 
 	for {
-	fmt.Print("Seleccione Tipo (I/M): ")
+	log.Print("Seleccione Tipo (I/M): ")
 	reader := bufio.NewReader(os.Stdin)
 	// ReadString will block until the delimiter is entered
 	input, err := reader.ReadString('\n')
 	if err != nil {
-		fmt.Println("An error occured while reading input. Please try again", err)
+		log.Println("An error occured while reading input. Please try again", err)
 		return
 	}
 
 	// remove the delimeter from the string
-	input = strings.TrimSuffix(input, "\r\n")
+	input = strings.TrimSuffix(input, "\n")
 	input = strings.ToUpper(input)
 	if input == "I" || input =="M" {
-		//fmt.Println(input)
-		ConexionGRPC(Estados[input])
+		log.Println(input)
+		ConexionGRPC(input)
 	}else{
-		fmt.Println("\nComando no reconocido!\n")
+		log.Println("\nComando no reconocido!\n")
 	}
 	//fmt.Println(input)
 
